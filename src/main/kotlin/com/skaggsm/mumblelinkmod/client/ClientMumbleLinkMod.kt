@@ -141,8 +141,15 @@ object ClientMumbleLinkMod : ClientModInitializer {
                     val camTop = floatArrayOf(0f, 1f, 0f)
 
                     // Make people in other dimensions far away so that they're muted.
-                    val yAxisAdjuster = world.dimension.hashCode() * config.clientDimensionYAxisAdjust
-                    camPos[1] += yAxisAdjuster
+                    if(world.registryKey.value.path == "overworld"){
+                        //camPos[1] += 0
+                    }
+                    else if(world.registryKey.value.path == "the_nether"){
+                        camPos[1] += config.clientDimensionYAxisAdjust
+                    }
+                    else if(world.registryKey.value.path == "the_end"){
+                        camPos[1] += -1*config.clientDimensionYAxisAdjust
+                    }
 
                     mumble.uiVersion = 2
                     mumble.uiTick++
@@ -156,6 +163,7 @@ object ClientMumbleLinkMod : ClientModInitializer {
                     mumble.cameraPosition = camPos
                     mumble.cameraFront = camDir
                     mumble.cameraTop = camTop
+                    LOG.info(Json.encodeToString(camPos))
 
                     mumble.identity = Json.encodeToString(Identity(world, player))
 
